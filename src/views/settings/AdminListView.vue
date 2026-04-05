@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi, type Admin } from '@/api/admin'
 import { useRouter } from 'vue-router'
+import PageContainer from '@/components/PageContainer.vue'
 
 const router = useRouter()
 const admins = ref<Admin[]>([])
@@ -36,7 +37,7 @@ onMounted(fetchAdmins)
 </script>
 
 <template>
-    <div>
+    <PageContainer>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px">
             <h2 style="margin: 0">관리자 관리</h2>
             <el-button type="primary" @click="router.push('/settings/admins/create')">관리자 추가</el-button>
@@ -67,5 +68,5 @@ onMounted(fetchAdmins)
                 </template>
             </el-table-column>
         </el-table>
-    </div>
+    </PageContainer>
 </template>

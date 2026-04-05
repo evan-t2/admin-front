@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { teamApi, type Team } from '@/api/team'
+import PageContainer from '@/components/PageContainer.vue'
 
 const teams = ref<Team[]>([])
 const loading = ref(false)
@@ -31,16 +32,10 @@ function openDialog(team?: Team) {
 }
 
 async function handleSave() {
-    if (!form.value.teamCode.trim() || !form.value.teamName.trim()) {
-        ElMessage.warning('모든 항목을 입력해주세요.')
-        return
-    }
+    if (!form.value.teamCode.trim() || !form.value.teamName.trim()) { ElMessage.warning('모든 항목을 입력해주세요.'); return }
     try {
-        if (editingCode.value) {
-            await teamApi.update(editingCode.value, { teamName: form.value.teamName })
-        } else {
-            await teamApi.create(form.value)
-        }
+        if (editingCode.value) { await teamApi.update(editingCode.value, { teamName: form.value.teamName }) }
+        else { await teamApi.create(form.value) }
         ElMessage.success('저장되었습니다.')
         dialogVisible.value = false
         fetchTeams()
@@ -49,18 +44,14 @@ async function handleSave() {
 
 async function handleDelete(teamCode: string) {
     await ElMessageBox.confirm('삭제하시겠습니까?', '확인')
-    try {
-        await teamApi.delete(teamCode)
-        ElMessage.success('삭제되었습니다.')
-        fetchTeams()
-    } catch { /* interceptor */ }
+    try { await teamApi.delete(teamCode); ElMessage.success('삭제되었습니다.'); fetchTeams() } catch { /* interceptor */ }
 }
 
 onMounted(fetchTeams)
 </script>
 
 <template>
-    <div>
+    <PageContainer>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px">
             <h2 style="margin: 0">팀정보 관리</h2>
             <el-button type="primary" @click="openDialog()">팀 추가</el-button>
@@ -78,17 +69,13 @@ onMounted(fetchTeams)
         </el-table>
         <el-dialog v-model="dialogVisible" :title="dialogTitle" width="400px">
             <el-form label-width="80px">
-                <el-form-item label="팀 코드">
-                    <el-input v-model="form.teamCode" :disabled="!!editingCode" />
-                </el-form-item>
-                <el-form-item label="팀 이름">
-                    <el-input v-model="form.teamName" />
-                </el-form-item>
+                <el-form-item label="팀 코드"><el-input v-model="form.teamCode" :disabled="!!editingCode" /></el-form-item>
+                <el-form-item label="팀 이름"><el-input v-model="form.teamName" /></el-form-item>
             </el-form>
             <template #footer>
                 <el-button @click="dialogVisible = false">취소</el-button>
                 <el-button type="primary" @click="handleSave">저장</el-button>
             </template>
         </el-dialog>
-    </div>
+    </PageContainer>
 </template>

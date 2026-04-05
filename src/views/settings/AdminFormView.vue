@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { adminApi } from '@/api/admin'
 import { teamApi, type Team } from '@/api/team'
+import PageContainer from '@/components/PageContainer.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -81,47 +82,49 @@ onMounted(() => { fetchTeams(); fetchAdmin() })
 </script>
 
 <template>
-    <div v-loading="loading">
+    <PageContainer v-loading="loading">
         <h2 style="margin-bottom: 16px">{{ isEdit ? '관리자 수정' : '관리자 추가' }}</h2>
-        <el-card style="max-width: 600px">
-            <el-form label-width="120px" label-position="left">
-                <el-form-item label="이름">
-                    <el-input v-model="form.adminName" />
-                </el-form-item>
-                <el-form-item label="이메일">
-                    <el-input v-model="form.adminEmail" :disabled="isEdit" />
-                </el-form-item>
-                <el-form-item :label="isEdit ? '비밀번호 변경' : '비밀번호'">
-                    <el-input v-model="form.adminPwd" type="password" show-password :placeholder="isEdit ? '변경 시에만 입력' : '비밀번호'" />
-                </el-form-item>
-                <el-form-item label="전화번호">
-                    <el-input v-model="form.adminTel" />
-                </el-form-item>
-                <el-form-item label="팀">
-                    <el-select v-model="form.teamCode" style="width: 100%">
-                        <el-option v-for="t in teams" :key="t.teamCode" :label="t.teamName" :value="t.teamCode" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="등급">
-                    <el-select v-model="form.adminType" style="width: 100%">
-                        <el-option label="일반" :value="1" />
-                        <el-option label="마스터" :value="50" />
-                        <el-option label="최고마스터" :value="100" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="상태">
-                    <el-radio-group v-model="form.adminStats">
-                        <el-radio value="y">활성</el-radio>
-                        <el-radio value="n">비활성</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" :loading="saving" @click="handleSubmit">
-                        {{ isEdit ? '수정' : '등록' }}
-                    </el-button>
-                    <el-button @click="router.push('/settings/admins')">취소</el-button>
-                </el-form-item>
-            </el-form>
-        </el-card>
-    </div>
+        <div style="display: flex; justify-content: center">
+            <el-card style="width: 600px">
+                <el-form label-width="120px" label-position="left">
+                    <el-form-item label="이름">
+                        <el-input v-model="form.adminName" />
+                    </el-form-item>
+                    <el-form-item label="이메일">
+                        <el-input v-model="form.adminEmail" :disabled="isEdit" />
+                    </el-form-item>
+                    <el-form-item :label="isEdit ? '비밀번호 변경' : '비밀번호'">
+                        <el-input v-model="form.adminPwd" type="password" show-password :placeholder="isEdit ? '변경 시에만 입력' : '비밀번호'" />
+                    </el-form-item>
+                    <el-form-item label="전화번호">
+                        <el-input v-model="form.adminTel" />
+                    </el-form-item>
+                    <el-form-item label="팀">
+                        <el-select v-model="form.teamCode" style="width: 100%">
+                            <el-option v-for="t in teams" :key="t.teamCode" :label="t.teamName" :value="t.teamCode" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="등급">
+                        <el-select v-model="form.adminType" style="width: 100%">
+                            <el-option label="일반" :value="1" />
+                            <el-option label="마스터" :value="50" />
+                            <el-option label="최고마스터" :value="100" />
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="상태">
+                        <el-radio-group v-model="form.adminStats">
+                            <el-radio value="y">활성</el-radio>
+                            <el-radio value="n">비활성</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" :loading="saving" @click="handleSubmit">
+                            {{ isEdit ? '수정' : '등록' }}
+                        </el-button>
+                        <el-button @click="router.push('/settings/admins')">취소</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </div>
+    </PageContainer>
 </template>

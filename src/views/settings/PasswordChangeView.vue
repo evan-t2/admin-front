@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import api from '@/api'
+import PageContainer from '@/components/PageContainer.vue'
 
 const form = ref({
     oldPassword: '',
@@ -29,23 +30,25 @@ async function handleSubmit() {
 </script>
 
 <template>
-    <div>
+    <PageContainer>
         <h2 style="margin-bottom: 16px">비밀번호 변경</h2>
-        <el-card style="max-width: 500px">
-            <el-form label-width="140px" label-position="left">
-                <el-form-item label="현재 비밀번호">
-                    <el-input v-model="form.oldPassword" type="password" show-password />
-                </el-form-item>
-                <el-form-item label="신규 비밀번호">
-                    <el-input v-model="form.newPassword" type="password" show-password />
-                </el-form-item>
-                <el-form-item label="신규 비밀번호 확인">
-                    <el-input v-model="form.confirmPassword" type="password" show-password />
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" :loading="saving" @click="handleSubmit">변경</el-button>
-                </el-form-item>
-            </el-form>
-        </el-card>
-    </div>
+        <div style="display: flex; justify-content: center">
+            <el-card style="width: 500px">
+                <el-form label-width="140px" label-position="left">
+                    <el-form-item label="현재 비밀번호">
+                        <el-input v-model="form.oldPassword" type="password" show-password />
+                    </el-form-item>
+                    <el-form-item label="신규 비밀번호">
+                        <el-input v-model="form.newPassword" type="password" show-password />
+                    </el-form-item>
+                    <el-form-item label="신규 비밀번호 확인">
+                        <el-input v-model="form.confirmPassword" type="password" show-password />
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" :loading="saving" @click="handleSubmit">변경</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </div>
+    </PageContainer>
 </template>

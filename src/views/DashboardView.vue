@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import PageContainer from '@/components/PageContainer.vue'
 </script>
 
 <template>
-    <div>
+    <PageContainer>
         <h2>대시보드</h2>
         <p>준비 중입니다.</p>
-    </div>
+    </PageContainer>
 </template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import PageContainer from "@/components/PageContainer.vue"
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { faqCategoryApi, faqQuestionApi, type FaqCategory, type FaqQuestion } from '@/api/faq'
 
@@ -113,7 +114,7 @@ onMounted(() => { fetchCategories(); fetchQuestions() })
 </script>
 
 <template>
-    <div>
+    <PageContainer>
         <h2 style="margin-bottom: 16px">자주 묻는 질문 관리</h2>
         <el-tabs v-model="activeTab">
             <el-tab-pane label="카테고리 관리" name="categories">
@@ -181,5 +182,5 @@ onMounted(() => { fetchCategories(); fetchQuestions() })
             </el-form>
             <template #footer><el-button @click="questionDialogVisible = false">취소</el-button><el-button type="primary" @click="saveQuestion">저장</el-button></template>
         </el-dialog>
-    </div>
+    </PageContainer>
 </template>

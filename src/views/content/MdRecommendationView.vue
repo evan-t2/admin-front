@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { mdRecommendationApi, type MdRecommendation } from '@/api/mdRecommendation'
+import PageContainer from '@/components/PageContainer.vue'
 
 const items = ref<MdRecommendation[]>([])
 const loading = ref(false)
@@ -19,25 +20,16 @@ async function fetchList() {
 }
 
 function openDialog(item?: MdRecommendation) {
-    if (item) {
-        form.value = { index: item.index, affiliateName: item.affiliateName, description: item.description }
-    } else {
-        form.value = { index: 0, affiliateName: '', description: '' }
-    }
+    if (item) { form.value = { index: item.index, affiliateName: item.affiliateName, description: item.description } }
+    else { form.value = { index: 0, affiliateName: '', description: '' } }
     dialogVisible.value = true
 }
 
 async function handleSave() {
-    if (!form.value.affiliateName.trim()) {
-        ElMessage.warning('제휴사명을 입력해주세요.')
-        return
-    }
+    if (!form.value.affiliateName.trim()) { ElMessage.warning('제휴사명을 입력해주세요.'); return }
     try {
-        if (form.value.index) {
-            await mdRecommendationApi.update(form.value.index, { description: form.value.description })
-        } else {
-            await mdRecommendationApi.create({ affiliateName: form.value.affiliateName, description: form.value.description })
-        }
+        if (form.value.index) { await mdRecommendationApi.update(form.value.index, { description: form.value.description }) }
+        else { await mdRecommendationApi.create({ affiliateName: form.value.affiliateName, description: form.value.description }) }
         ElMessage.success('저장되었습니다.')
         dialogVisible.value = false
         fetchList()
@@ -46,18 +38,14 @@ async function handleSave() {
 
 async function handleDelete(index: number) {
     await ElMessageBox.confirm('삭제하시겠습니까?', '확인')
-    try {
-        await mdRecommendationApi.delete(index)
-        ElMessage.success('삭제되었습니다.')
-        fetchList()
-    } catch { /* interceptor */ }
+    try { await mdRecommendationApi.delete(index); ElMessage.success('삭제되었습니다.'); fetchList() } catch { /* interceptor */ }
 }
 
 onMounted(fetchList)
 </script>
 
 <template>
-    <div>
+    <PageContainer>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px">
             <h2 style="margin: 0">카모아 한마디 (MD 추천)</h2>
             <el-button type="primary" @click="openDialog()">추가</el-button>
@@ -76,17 +64,13 @@ onMounted(fetchList)
         </el-table>
         <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500px">
             <el-form label-width="80px">
-                <el-form-item label="제휴사명">
-                    <el-input v-model="form.affiliateName" :disabled="!!form.index" />
-                </el-form-item>
-                <el-form-item label="한마디">
-                    <el-input v-model="form.description" type="textarea" :rows="3" />
-                </el-form-item>
+                <el-form-item label="제휴사명"><el-input v-model="form.affiliateName" :disabled="!!form.index" /></el-form-item>
+                <el-form-item label="한마디"><el-input v-model="form.description" type="textarea" :rows="3" /></el-form-item>
             </el-form>
             <template #footer>
                 <el-button @click="dialogVisible = false">취소</el-button>
                 <el-button type="primary" @click="handleSave">저장</el-button>
             </template>
         </el-dialog>
-    </div>
+    </PageContainer>
 </template>
