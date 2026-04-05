@@ -15,6 +15,8 @@ api.interceptors.request.use((config) => {
     return config
 })
 
+let isForbiddenAlertShowing = false
+
 api.interceptors.response.use(
     (response) => response.data,
     (error) => {
@@ -25,11 +27,17 @@ api.interceptors.response.use(
             localStorage.removeItem('token')
             router.push('/login')
         } else if (status === 403) {
-            ElMessageBox.alert('접근 권한이 없습니다.', '권한 오류', {
-                confirmButtonText: '확인',
-                type: 'warning',
-                callback: () => router.back(),
-            })
+            if (!isForbiddenAlertShowing) {
+                isForbiddenAlertShowing = true
+                ElMessageBox.alert('접근 권한이 없습니다.', '권한 오류', {
+                    confirmButtonText: '확인',
+                    type: 'warning',
+                    callback: () => {
+                        isForbiddenAlertShowing = false
+                        router.back()
+                    },
+                })
+            }
         } else {
             ElMessage.error(message)
         }
