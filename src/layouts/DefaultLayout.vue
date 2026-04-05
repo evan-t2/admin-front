@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
+const menuSearch = ref('')
 
 const menuGroups = [
     {
@@ -256,6 +258,19 @@ const menuGroups = [
         ],
     },
 ]
+
+const filteredMenuGroups = computed(() => {
+    const keyword = menuSearch.value.trim().toLowerCase()
+    if (!keyword) return menuGroups
+    return menuGroups
+        .map((group) => ({
+            ...group,
+            children: group.children.filter((item: any) =>
+                !item.divider && item.title?.toLowerCase().includes(keyword)
+            ),
+        }))
+        .filter((group) => group.children.length > 0)
+})
 </script>
 
 <template>
@@ -278,6 +293,17 @@ const menuGroups = [
                     </div>
                 </a>
 
+                <!-- 메뉴 검색 -->
+                <div style="padding: 8px 12px">
+                    <el-input
+                        v-model="menuSearch"
+                        placeholder="메뉴 검색"
+                        prefix-icon="Search"
+                        size="small"
+                        clearable
+                    />
+                </div>
+
                 <!-- 즐겨찾는 메뉴 (TODO: localStorage 기반 구현) -->
                 <el-sub-menu index="group-favorite">
                     <template #title>
@@ -289,7 +315,7 @@ const menuGroups = [
                     </el-menu-item>
                 </el-sub-menu>
 
-                <el-sub-menu v-for="(group, i) in menuGroups" :key="i" :index="'group-' + i">
+                <el-sub-menu v-for="(group, i) in filteredMenuGroups" :key="i" :index="'group-' + i">
                     <template #title>
                         <el-icon>
                             <component :is="group.icon" />
@@ -366,5 +392,22 @@ const menuGroups = [
 
 .bottom-menu-link:hover {
     color: #fff;
+}
+
+.el-aside ::-webkit-scrollbar {
+    width: 6px;
+}
+
+.el-aside ::-webkit-scrollbar-track {
+    background: #001529;
+}
+
+.el-aside ::-webkit-scrollbar-thumb {
+    background: #ffffff33;
+    border-radius: 3px;
+}
+
+.el-aside ::-webkit-scrollbar-thumb:hover {
+    background: #ffffff55;
 }
 </style>
