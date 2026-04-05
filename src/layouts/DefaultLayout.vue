@@ -398,8 +398,8 @@ const filteredMenuGroups = computed(() => {
             </div>
         </el-aside>
 
-        <el-container>
-            <el-main style="background: #f5f5f5">
+        <el-container style="overflow: hidden">
+            <el-main style="background: #f5f5f5; overflow-y: auto; height: 100vh">
                 <router-view />
             </el-main>
         </el-container>
