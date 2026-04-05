@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import router from '@/router'
 
 const api = axios.create({
@@ -25,8 +25,11 @@ api.interceptors.response.use(
             localStorage.removeItem('token')
             router.push('/login')
         } else if (status === 403) {
-            ElMessage.error('접근 권한이 없습니다.')
-            router.back()
+            ElMessageBox.alert('접근 권한이 없습니다.', '권한 오류', {
+                confirmButtonText: '확인',
+                type: 'warning',
+                callback: () => router.back(),
+            })
         } else {
             ElMessage.error(message)
         }
