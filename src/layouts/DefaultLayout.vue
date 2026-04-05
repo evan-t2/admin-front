@@ -316,7 +316,7 @@ const filteredMenuGroups = computed(() => {
 
 <template>
     <el-container style="height: 100vh">
-        <el-aside width="240px" style="background: #001529; overflow-y: auto">
+        <el-aside width="240px" style="background: #001529; overflow-y: auto; border-right: none; box-shadow: none">
             <div style="padding: 20px; text-align: center; color: #fff; font-size: 18px; font-weight: bold">
                 CarMore Admin
             </div>
@@ -492,5 +492,22 @@ const filteredMenuGroups = computed(() => {
 
 .el-aside ::-webkit-scrollbar-thumb:hover {
     background: #ffffff55;
+}
+
+.el-aside :deep(.el-menu) {
+    border-right: none;
+}
+
+.el-main::-webkit-scrollbar {
+    width: 6px;
+}
+
+.el-main::-webkit-scrollbar-track {
+    background: #f5f5f5;
+}
+
+.el-main::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
 }
 </style>
