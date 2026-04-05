@@ -26,6 +26,7 @@ api.interceptors.response.use(
             router.push('/login')
         } else if (status === 403) {
             ElMessage.error('접근 권한이 없습니다.')
+            router.push('/forbidden')
         } else {
             ElMessage.error(message)
         }
