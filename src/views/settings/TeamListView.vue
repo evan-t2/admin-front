@@ -13,21 +13,13 @@ const dialogTitle = computed(() => editingCode.value ? '팀 수정' : '팀 추�
 
 async function fetchTeams() {
     loading.value = true
-    try {
-        const res: any = await teamApi.getList()
-        teams.value = res.data
-    } catch { /* interceptor */ }
+    try { const res: any = await teamApi.getList(); teams.value = res.data } catch {}
     finally { loading.value = false }
 }
 
 function openDialog(team?: Team) {
-    if (team) {
-        editingCode.value = team.teamCode
-        form.value = { teamCode: team.teamCode, teamName: team.teamName }
-    } else {
-        editingCode.value = null
-        form.value = { teamCode: '', teamName: '' }
-    }
+    if (team) { editingCode.value = team.teamCode; form.value = { teamCode: team.teamCode, teamName: team.teamName } }
+    else { editingCode.value = null; form.value = { teamCode: '', teamName: '' } }
     dialogVisible.value = true
 }
 
@@ -36,26 +28,21 @@ async function handleSave() {
     try {
         if (editingCode.value) { await teamApi.update(editingCode.value, { teamName: form.value.teamName }) }
         else { await teamApi.create(form.value) }
-        ElMessage.success('저장되었습니다.')
-        dialogVisible.value = false
-        fetchTeams()
-    } catch { /* interceptor */ }
+        ElMessage.success('저장되었습니다.'); dialogVisible.value = false; fetchTeams()
+    } catch {}
 }
 
 async function handleDelete(teamCode: string) {
     await ElMessageBox.confirm('삭제하시겠습니까?', '확인')
-    try { await teamApi.delete(teamCode); ElMessage.success('삭제되었습니다.'); fetchTeams() } catch { /* interceptor */ }
+    try { await teamApi.delete(teamCode); ElMessage.success('삭제되었습니다.'); fetchTeams() } catch {}
 }
 
 onMounted(fetchTeams)
 </script>
 
 <template>
-    <PageContainer>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px">
-            <h2 style="margin: 0">팀정보 관리</h2>
-            <el-button type="primary" @click="openDialog()">팀 추가</el-button>
-        </div>
+    <PageContainer title="팀정보 관리">
+        <template #actions><el-button type="primary" @click="openDialog()">팀 추가</el-button></template>
         <el-table :data="teams" v-loading="loading" border>
             <el-table-column prop="teamCode" label="팀 코드" width="200" />
             <el-table-column prop="teamName" label="팀 이름" min-width="200" />
@@ -72,10 +59,7 @@ onMounted(fetchTeams)
                 <el-form-item label="팀 코드"><el-input v-model="form.teamCode" :disabled="!!editingCode" /></el-form-item>
                 <el-form-item label="팀 이름"><el-input v-model="form.teamName" /></el-form-item>
             </el-form>
-            <template #footer>
-                <el-button @click="dialogVisible = false">취소</el-button>
-                <el-button type="primary" @click="handleSave">저장</el-button>
-            </template>
+            <template #footer><el-button @click="dialogVisible = false">취소</el-button><el-button type="primary" @click="handleSave">저장</el-button></template>
         </el-dialog>
     </PageContainer>
 </template>

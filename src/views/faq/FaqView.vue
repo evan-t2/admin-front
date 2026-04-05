@@ -114,8 +114,7 @@ onMounted(() => { fetchCategories(); fetchQuestions() })
 </script>
 
 <template>
-    <PageContainer>
-        <h2 style="margin-bottom: 16px">자주 묻는 질문 관리</h2>
+    <PageContainer title="자주 묻는 질문 관리">
         <el-tabs v-model="activeTab">
             <el-tab-pane label="카테고리 관리" name="categories">
                 <div style="margin-bottom: 12px">

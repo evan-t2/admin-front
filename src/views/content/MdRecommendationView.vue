@@ -12,10 +12,7 @@ const dialogTitle = computed(() => form.value.index ? '수정' : '추가')
 
 async function fetchList() {
     loading.value = true
-    try {
-        const res: any = await mdRecommendationApi.getList()
-        items.value = res.data?.content || res.data || []
-    } catch { /* interceptor */ }
+    try { const res: any = await mdRecommendationApi.getList(); items.value = res.data?.content || res.data || [] } catch {}
     finally { loading.value = false }
 }
 
@@ -30,26 +27,21 @@ async function handleSave() {
     try {
         if (form.value.index) { await mdRecommendationApi.update(form.value.index, { description: form.value.description }) }
         else { await mdRecommendationApi.create({ affiliateName: form.value.affiliateName, description: form.value.description }) }
-        ElMessage.success('저장되었습니다.')
-        dialogVisible.value = false
-        fetchList()
-    } catch { /* interceptor */ }
+        ElMessage.success('저장되었습니다.'); dialogVisible.value = false; fetchList()
+    } catch {}
 }
 
 async function handleDelete(index: number) {
     await ElMessageBox.confirm('삭제하시겠습니까?', '확인')
-    try { await mdRecommendationApi.delete(index); ElMessage.success('삭제되었습니다.'); fetchList() } catch { /* interceptor */ }
+    try { await mdRecommendationApi.delete(index); ElMessage.success('삭제되었습니다.'); fetchList() } catch {}
 }
 
 onMounted(fetchList)
 </script>
 
 <template>
-    <PageContainer>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px">
-            <h2 style="margin: 0">카모아 한마디 (MD 추천)</h2>
-            <el-button type="primary" @click="openDialog()">추가</el-button>
-        </div>
+    <PageContainer title="카모아 한마디 (MD 추천)">
+        <template #actions><el-button type="primary" @click="openDialog()">추가</el-button></template>
         <el-table :data="items" v-loading="loading" border>
             <el-table-column prop="order" label="순서" width="70" align="center" />
             <el-table-column prop="affiliateName" label="제휴사명" width="200" />
@@ -67,10 +59,7 @@ onMounted(fetchList)
                 <el-form-item label="제휴사명"><el-input v-model="form.affiliateName" :disabled="!!form.index" /></el-form-item>
                 <el-form-item label="한마디"><el-input v-model="form.description" type="textarea" :rows="3" /></el-form-item>
             </el-form>
-            <template #footer>
-                <el-button @click="dialogVisible = false">취소</el-button>
-                <el-button type="primary" @click="handleSave">저장</el-button>
-            </template>
+            <template #footer><el-button @click="dialogVisible = false">취소</el-button><el-button type="primary" @click="handleSave">저장</el-button></template>
         </el-dialog>
     </PageContainer>
 </template>

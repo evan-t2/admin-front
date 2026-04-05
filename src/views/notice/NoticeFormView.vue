@@ -9,10 +9,9 @@ const route = useRoute()
 const router = useRouter()
 const loading = ref(false)
 const saving = ref(false)
-
 const index = computed(() => route.params.index ? Number(route.params.index) : null)
 const isEdit = computed(() => !!index.value)
-
+const pageTitle = computed(() => isEdit.value ? '공지사항 수정' : '공지사항 등록')
 const form = ref({ title: '', exposurePage: '', description: '', content: '', isShowing: true })
 
 async function fetchNotice() {
@@ -20,27 +19,20 @@ async function fetchNotice() {
     loading.value = true
     try {
         const res: any = await noticeApi.getOne(index.value)
-        const notice: Notice = res.data
-        form.value = { title: notice.title, exposurePage: notice.exposurePage, description: notice.description, content: notice.content, isShowing: notice.isShowing }
-    } catch {
-        ElMessage.error('공지사항을 불러오지 못했습니다.')
-        router.push('/notice')
-    } finally { loading.value = false }
+        const n: Notice = res.data
+        form.value = { title: n.title, exposurePage: n.exposurePage, description: n.description, content: n.content, isShowing: n.isShowing }
+    } catch { ElMessage.error('공지사항을 불러오지 못했습니다.'); router.push('/notice') }
+    finally { loading.value = false }
 }
 
 async function handleSubmit() {
     if (!form.value.title.trim()) { ElMessage.warning('제목을 입력해주세요.'); return }
     saving.value = true
     try {
-        if (isEdit.value) {
-            await noticeApi.update(index.value!, form.value)
-            ElMessage.success('수정되었습니다.')
-        } else {
-            await noticeApi.create(form.value)
-            ElMessage.success('등록되었습니다.')
-        }
+        if (isEdit.value) { await noticeApi.update(index.value!, form.value); ElMessage.success('수정되었습니다.') }
+        else { await noticeApi.create(form.value); ElMessage.success('등록되었습니다.') }
         router.push('/notice')
-    } catch { /* interceptor */ }
+    } catch {}
     finally { saving.value = false }
 }
 
@@ -48,9 +40,8 @@ onMounted(fetchNotice)
 </script>
 
 <template>
-    <PageContainer v-loading="loading">
-        <h2 style="margin-bottom: 16px">{{ isEdit ? '공지사항 수정' : '공지사항 등록' }}</h2>
-        <div style="display: flex; justify-content: center">
+    <PageContainer :title="pageTitle">
+        <div v-loading="loading" style="display: flex; justify-content: center">
             <el-card style="width: 700px">
                 <el-form label-width="120px" label-position="left">
                     <el-form-item label="제목"><el-input v-model="form.title" placeholder="제목을 입력하세요" /></el-form-item>
