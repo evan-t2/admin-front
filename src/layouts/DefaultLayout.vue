@@ -420,6 +420,8 @@ const filteredMenuGroups = computed(() => {
 .el-aside {
     display: flex;
     flex-direction: column;
+    z-index: 10;
+    position: relative;
 }
 
 .el-aside .el-menu {
