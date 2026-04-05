@@ -13,26 +13,13 @@ const router = createRouter({
             path: '/',
             component: () => import('@/layouts/DefaultLayout.vue'),
             children: [
-                {
-                    path: '',
-                    name: 'dashboard',
-                    component: () => import('@/views/DashboardView.vue'),
-                },
-                {
-                    path: 'notice',
-                    name: 'notice',
-                    component: () => import('@/views/notice/NoticeListView.vue'),
-                },
-                {
-                    path: 'notice/:index',
-                    name: 'notice-detail',
-                    component: () => import('@/views/notice/NoticeDetailView.vue'),
-                },
-                {
-                    path: 'faq',
-                    name: 'faq',
-                    component: () => import('@/views/faq/FaqView.vue'),
-                },
+                { path: '', redirect: '/dashboard' },
+                { path: 'dashboard', name: 'dashboard', component: () => import('@/views/DashboardView.vue') },
+                { path: 'notice', name: 'notice', component: () => import('@/views/notice/NoticeListView.vue') },
+                { path: 'notice/create', name: 'notice-create', component: () => import('@/views/notice/NoticeFormView.vue') },
+                { path: 'notice/:index', name: 'notice-edit', component: () => import('@/views/notice/NoticeFormView.vue') },
+                { path: 'faq', name: 'faq', component: () => import('@/views/faq/FaqView.vue') },
+                { path: 'settings/password', name: 'settings-password', component: () => import('@/views/settings/PasswordChangeView.vue') },
             ],
         },
     ],
