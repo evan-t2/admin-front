@@ -347,7 +347,7 @@ const filteredMenuGroups = computed(() => {
                 </div>
 
                 <!-- 즐겨찾는 메뉴 -->
-                <el-sub-menu index="group-favorite">
+                <el-sub-menu index="group-favorite" class="favorite-menu-group">
                     <template #title>
                         <el-icon><Star /></el-icon>
                         <span>즐겨찾는 메뉴</span>
@@ -445,6 +445,14 @@ const filteredMenuGroups = computed(() => {
 
 .bottom-menu-link:hover {
     color: #fff;
+}
+
+.favorite-menu-group :deep(.el-sub-menu__title) {
+    background-color: #0c2135 !important;
+}
+
+.favorite-menu-group :deep(.el-menu) {
+    background-color: #0c2135 !important;
 }
 
 .menu-item-with-star {
