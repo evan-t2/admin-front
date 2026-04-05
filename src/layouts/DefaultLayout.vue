@@ -1,9 +1,50 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
 const menuSearch = ref('')
+const menuRef = ref<any>(null)
+
+// 즐겨찾기
+const FAVORITE_KEY = 'workspace-favorite-menu'
+const favorites = ref<string[]>(JSON.parse(localStorage.getItem(FAVORITE_KEY) || '[]'))
+
+function toggleFavorite(path: string) {
+    const idx = favorites.value.indexOf(path)
+    if (idx === -1) {
+        favorites.value.push(path)
+    } else {
+        favorites.value.splice(idx, 1)
+    }
+    localStorage.setItem(FAVORITE_KEY, JSON.stringify(favorites.value))
+}
+
+function isFavorite(path: string) {
+    return favorites.value.includes(path)
+}
+
+// 즐겨찾기 메뉴 아이템
+const favoriteMenuItems = computed(() => {
+    const items: { title: string; path: string }[] = []
+    for (const group of menuGroups) {
+        for (const child of group.children) {
+            if (!child.divider && child.path && favorites.value.includes(child.path)) {
+                items.push({ title: child.title!, path: child.path })
+            }
+        }
+    }
+    return items
+})
+
+// 검색 시 자동 펼침
+watch(menuSearch, (val) => {
+    if (val && menuRef.value) {
+        filteredMenuGroups.value.forEach((_, i) => {
+            menuRef.value?.open('group-' + i)
+        })
+    }
+})
 
 const menuGroups = [
     {
@@ -280,6 +321,7 @@ const filteredMenuGroups = computed(() => {
                 CarMore Admin
             </div>
             <el-menu
+                ref="menuRef"
                 :default-active="$route.path"
                 router
                 background-color="#001529"
@@ -304,14 +346,17 @@ const filteredMenuGroups = computed(() => {
                     />
                 </div>
 
-                <!-- 즐겨찾는 메뉴 (TODO: localStorage 기반 구현) -->
+                <!-- 즐겨찾는 메뉴 -->
                 <el-sub-menu index="group-favorite">
                     <template #title>
                         <el-icon><Star /></el-icon>
                         <span>즐겨찾는 메뉴</span>
                     </template>
-                    <el-menu-item disabled>
+                    <el-menu-item v-if="favoriteMenuItems.length === 0" disabled>
                         <span style="font-size: 12px; color: #999">즐겨찾기한 메뉴가 없습니다</span>
+                    </el-menu-item>
+                    <el-menu-item v-for="item in favoriteMenuItems" :key="'fav-' + item.path" :index="item.path">
+                        {{ item.title }}
                     </el-menu-item>
                 </el-sub-menu>
 
@@ -324,8 +369,16 @@ const filteredMenuGroups = computed(() => {
                     </template>
                     <template v-for="(item, j) in group.children" :key="j">
                         <el-divider v-if="item.divider" style="margin: 4px 0; border-color: #ffffff1a" />
-                        <el-menu-item v-else :index="item.path">
-                            {{ item.title }}
+                        <el-menu-item v-else :index="item.path" class="menu-item-with-star">
+                            <span style="flex: 1">{{ item.title }}</span>
+                            <el-icon
+                                class="favorite-star"
+                                :style="{ color: isFavorite(item.path!) ? '#f7ba2a' : '#ffffff33' }"
+                                @click.prevent.stop="toggleFavorite(item.path!)"
+                            >
+                                <StarFilled v-if="isFavorite(item.path!)" />
+                                <Star v-else />
+                            </el-icon>
                         </el-menu-item>
                     </template>
                 </el-sub-menu>
@@ -392,6 +445,26 @@ const filteredMenuGroups = computed(() => {
 
 .bottom-menu-link:hover {
     color: #fff;
+}
+
+.menu-item-with-star {
+    display: flex !important;
+    align-items: center;
+}
+
+.favorite-star {
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+}
+
+.menu-item-with-star:hover .favorite-star {
+    opacity: 1;
+}
+
+.favorite-star:hover {
+    color: #f7ba2a !important;
 }
 
 .el-aside ::-webkit-scrollbar {
