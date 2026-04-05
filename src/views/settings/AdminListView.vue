@@ -12,7 +12,7 @@ async function fetchAdmins() {
     loading.value = true
     try {
         const res: any = await adminApi.getList()
-        admins.value = res.data
+        admins.value = res.data.content
     } catch { /* interceptor */ }
     finally { loading.value = false }
 }
