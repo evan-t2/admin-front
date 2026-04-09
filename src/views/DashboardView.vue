@@ -39,8 +39,8 @@ const todaySalesCount = computed(() => {
 })
 
 // 어제/오늘 상담 통계
-const yesterdayCs = computed(() => csStats.value.length >= 2 ? csStats.value[0] : null)
-const todayCs = computed(() => csStats.value.length >= 1 ? csStats.value[csStats.value.length - 1] : null)
+const todayCs = computed(() => csStats.value.length >= 1 ? csStats.value[0] : null)
+const yesterdayCs = computed(() => csStats.value.length >= 2 ? csStats.value[1] : null)
 
 // 매출 차트 옵션
 const salesChartOption = computed(() => ({
