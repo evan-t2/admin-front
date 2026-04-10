@@ -45,13 +45,13 @@ const yesterdayCs = computed(() => csStats.value.length >= 2 ? csStats.value[1] 
 // 매출 차트 옵션
 const salesChartOption = computed(() => ({
     tooltip: { trigger: 'axis' },
-    legend: { data: ['자체 정산', '월 정산', '월구독 정산', '순이익', 'PG 수수료', '예약 수', '취소 수'], bottom: 0 },
+    legend: { data: ['자체 정산', '월 정산', '월구독 정산', '순이익', 'PG 수수료', '예약 수', '취소 수'], bottom: 30, itemGap: 6, itemWidth: 14, textStyle: { fontSize: 11 } },
     grid: { left: 60, right: 60, top: 30, bottom: 80 },
-    dataZoom: [{ type: 'slider', start: 80, end: 100 }],
+    dataZoom: [{ type: 'slider', start: 80, end: 100, bottom: 0, height: 20 }],
     xAxis: { type: 'category', data: dailySales.value.map(d => d.date) },
     yAxis: [
-        { type: 'value', name: '거래대금(만원)', axisLabel: { formatter: (v: number) => (v / 10000).toLocaleString() } },
-        { type: 'value', name: '거래 수', position: 'right' }
+        { type: 'value', name: '거래대금(만원)', nameGap: 10, axisLabel: { formatter: (v: number) => (v / 10000).toLocaleString() } },
+        { type: 'value', name: '거래 수', nameGap: 10, position: 'right' }
     ],
     series: [
         { name: '자체 정산', type: 'bar', stack: 'settlement', data: dailySales.value.map(d => d.selfAffiliateSettlementTotal), color: '#0D6FFC' },
@@ -67,9 +67,9 @@ const salesChartOption = computed(() => ({
 // 재주문 차트 옵션
 const reorderChartOption = computed(() => ({
     tooltip: { trigger: 'axis' },
-    legend: { data: ['신규주문', '재주문', '재주문 비율'], bottom: 0 },
+    legend: { data: ['신규주문', '재주문', '재주문 비율'], bottom: 30 },
     grid: { left: 60, right: 60, top: 30, bottom: 80 },
-    dataZoom: [{ type: 'slider', start: 80, end: 100 }],
+    dataZoom: [{ type: 'slider', start: 80, end: 100, bottom: 0, height: 20 }],
     xAxis: { type: 'category', data: reorderStats.value.map(d => d.date) },
     yAxis: [
         { type: 'value', name: '주문 수' },
@@ -137,12 +137,12 @@ onMounted(fetchAll)
             <el-row :gutter="20" style="margin-bottom: 20px">
                 <el-col :span="12">
                     <el-card header="일별 매출 통계">
-                        <v-chart :option="salesChartOption" style="height: 400px" autoresize />
+                        <v-chart :option="salesChartOption" style="height: 550px" autoresize />
                     </el-card>
                 </el-col>
                 <el-col :span="12">
                     <el-card header="일별 재주문 통계">
-                        <v-chart :option="reorderChartOption" style="height: 400px" autoresize />
+                        <v-chart :option="reorderChartOption" style="height: 550px" autoresize />
                     </el-card>
                 </el-col>
             </el-row>
