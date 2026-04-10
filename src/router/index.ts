@@ -23,6 +23,11 @@ const router = createRouter({
                 { path: 'faq', name: 'faq', component: () => import('@/views/faq/FaqView.vue') },
                 // MD 추천
                 { path: 'content/md-recommendation', name: 'md-recommendation', component: () => import('@/views/content/MdRecommendationView.vue') },
+                // 게시판
+                { path: 'content/board', name: 'board', component: () => import('@/views/content/BoardListView.vue') },
+                { path: 'content/board/create', name: 'board-create', component: () => import('@/views/content/BoardFormView.vue') },
+                { path: 'content/board/:index', name: 'board-detail', component: () => import('@/views/content/BoardDetailView.vue') },
+                { path: 'content/board/:index/edit', name: 'board-edit', component: () => import('@/views/content/BoardFormView.vue') },
                 // 포스트탭
                 { path: 'content/post-tab', name: 'post-tab', component: () => import('@/views/content/PostTabListView.vue') },
                 { path: 'content/post-tab/create', name: 'post-tab-create', component: () => import('@/views/content/PostTabFormView.vue') },
